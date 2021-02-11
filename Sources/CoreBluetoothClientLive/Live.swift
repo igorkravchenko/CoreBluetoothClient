@@ -65,6 +65,7 @@ extension CentralManager {
         }
             
         return Self(
+            state: { centalManager.state },
             authorization: {
                 if #available(iOS 13.1, *) {
                     return CBCentralManager.authorization

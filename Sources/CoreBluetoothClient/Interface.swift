@@ -9,6 +9,7 @@ import CoreBluetooth
 import Combine
 
 public struct CentralManager {
+    public var state: () -> CBManagerState
     public var authorization: () -> CBManagerAuthorization
     public var delegate: AnyPublisher<DelegateEvent, Never>
     public var isScanning: () -> Bool
@@ -22,6 +23,7 @@ public struct CentralManager {
     public var registerForConnectionEvents: ([CBConnectionEventMatchingOption : Any]?) -> Void
     
     public init(
+        state: @escaping () -> CBManagerState,
         authorization: @escaping () -> CBManagerAuthorization,
         delegate: AnyPublisher<CentralManager.DelegateEvent, Never>,
         isScanning: @escaping () -> Bool,
@@ -34,6 +36,7 @@ public struct CentralManager {
         cancelPeripheralConnection: @escaping (Peripheral) -> Void,
         registerForConnectionEvents: @escaping ([CBConnectionEventMatchingOption : Any]?) -> Void
     ) {
+        self.state = state
         self.authorization = authorization
         self.delegate = delegate
         self.isScanning = isScanning
