@@ -85,7 +85,9 @@ extension CentralManager {
             retrieveConnectedPeripheralsWithServices: {
                 centalManager.retrieveConnectedPeripherals(withServices: $0).map(Peripheral.live)
             },
-            scanForPeripheralsWithSerivicesAndOptions: centalManager.scanForPeripherals(withServices:options:),
+            scanForPeripheralsWithSerivicesAndOptions: { services, options in
+                centalManager.scanForPeripherals(withServices: services, options: options?.rawValue)
+            },
             stopScan: centalManager.stopScan,
             connectPeripheralWithOptions: { centalManager.connect($0.cb(), options: $1) },
             cancelPeripheralConnection: {
@@ -299,6 +301,19 @@ extension CentralManagerRestoredState {
 }
 
 extension ScanOptions {
+    public var rawValue: [String: Any]? {
+        var dict = [String: Any]()
+        if let allowDuplicates = self.allowDuplicates {
+            dict[CBCentralManagerScanOptionAllowDuplicatesKey] = allowDuplicates
+        }
+        
+        if let solicitedServiceUUIDs = self.solicitedServiceUUIDs {
+            dict[CBCentralManagerScanOptionSolicitedServiceUUIDsKey] = solicitedServiceUUIDs
+        }
+        
+        return dict
+    }
+    
     public static func live(_ rawValue: [String: Any]) -> Self {
         Self(
             allowDuplicates: rawValue[CBCentralManagerScanOptionAllowDuplicatesKey] as? Bool,

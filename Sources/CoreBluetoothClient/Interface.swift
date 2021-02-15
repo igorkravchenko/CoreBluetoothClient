@@ -16,7 +16,7 @@ public struct CentralManager {
     public var supportsFeatures: (CBCentralManager.Feature) -> Bool
     public var retrievePeripheralsWithIdentifiers: ([UUID]) -> [Peripheral]
     public var retrieveConnectedPeripheralsWithServices: ([CBUUID]) -> [Peripheral]
-    public var scanForPeripheralsWithSerivicesAndOptions: ([CBUUID]?, [String: Any]?) -> Void
+    public var scanForPeripheralsWithSerivicesAndOptions: ([CBUUID]?, ScanOptions?) -> Void
     public var stopScan: () -> Void
     public var connectPeripheralWithOptions: (_ peripheral: Peripheral, _ options: [String : Any]?) -> Void
     public var cancelPeripheralConnection: (Peripheral) -> Void
@@ -30,7 +30,7 @@ public struct CentralManager {
         supportsFeatures: @escaping (CBCentralManager.Feature) -> Bool,
         retrievePeripheralsWithIdentifiers: @escaping ([UUID]) -> [Peripheral],
         retrieveConnectedPeripheralsWithServices: @escaping ([CBUUID]) -> [Peripheral],
-        scanForPeripheralsWithSerivicesAndOptions: @escaping ([CBUUID]?, [String : Any]?) -> Void,
+        scanForPeripheralsWithSerivicesAndOptions: @escaping ([CBUUID]?, ScanOptions?) -> Void,
         stopScan: @escaping () -> Void,
         connectPeripheralWithOptions: @escaping (Peripheral, [String : Any]?) -> Void,
         cancelPeripheralConnection: @escaping (Peripheral) -> Void,
