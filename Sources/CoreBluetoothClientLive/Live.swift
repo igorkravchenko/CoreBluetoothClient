@@ -10,7 +10,9 @@ import Combine
 import CoreBluetoothClient
 
 extension CentralManager {
-    public static func live(centalManager: CBCentralManager) -> Self {
+    public static func live(queue: DispatchQueue? = nil, options: [String: Any]? = nil) -> Self {
+        let centalManager = CBCentralManager(delegate: nil, queue: queue, options: options)
+        
         class Delegate: NSObject, CBCentralManagerDelegate {
             let subject: PassthroughSubject<DelegateEvent, Never>
             
@@ -52,19 +54,10 @@ extension CentralManager {
             }
         }
         
-        let subject: PassthroughSubject<DelegateEvent, Never>
-        var delegate: Delegate?
-        // reuse delegate if one was created before, otherwice it may be overwritten
-        if centalManager.delegate != nil, let storedDelegate = centalManager.delegate as? Delegate {
-            delegate = storedDelegate
-            subject = storedDelegate.subject
-        } else {
-            precondition(centalManager.delegate == nil, "CBCentralManager.delegate must be nil")
-            subject = .init()
-            delegate = Delegate(subject: subject)
-            centalManager.delegate = delegate
-        }
-            
+        let subject: PassthroughSubject<DelegateEvent, Never> = .init()
+        var delegate: Delegate? = Delegate(subject: subject)
+        centalManager.delegate = delegate
+        
         return Self(
             state: { centalManager.state },
             authorization: {
