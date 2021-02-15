@@ -311,7 +311,7 @@ extension ScanOptions {
             dict[CBCentralManagerScanOptionSolicitedServiceUUIDsKey] = solicitedServiceUUIDs
         }
         
-        return dict
+        return dict.isEmpty ? nil : dict
     }
     
     public static func live(_ rawValue: [String: Any]) -> Self {
