@@ -53,7 +53,7 @@ public struct CentralManager {
     public enum DelegateEvent {
         case centralManagerDidUpdateState(CBManagerState)
         case centralManagerWillRestoreState([String : Any])
-        case centralManagerDidDiscover(peripheral: Peripheral, advertisementData: [String : Any], rssi: NSNumber)
+        case centralManagerDidDiscover(peripheral: Peripheral, advertisementData: AdvertisementData, rssi: NSNumber)
         case centralManagerDidConnectPeripheral(Peripheral)
         case centralManagerDidFailToConnectPeripheral(Peripheral, error: Error?)
         case centralManagerDidDisconnectPeripheral(peripheral: Peripheral, error: Error?)
@@ -305,3 +305,45 @@ public struct Peer {
         self.identifier = identifier
     }
 }
+
+public struct AdvertisementData: Equatable {
+    /// A Boolean value that indicates whether the advertising event type is connectable.
+    public var isConnectable: Bool?
+    /// The local name of a peripheral.
+    public var localName: String?
+    /// The manufacturer data of a peripheral.
+    public var manufacturerData: Data?
+    /// An array of UUIDs found in the overflow area of the advertisement data.
+    public var overflowServiceUUIDs: [CBUUID]?
+    /// A dictionary that contains service-specific advertisement data.
+    public var serviceData: [CBUUID: Data]?
+    /// An array of service UUIDs.
+    public var serviceUUIDs: [CBUUID]?
+    /// An array of solicited service UUIDs.
+    public var solicitedServiceUUIDs: [CBUUID]?
+    /// The transmit power of a peripheral.
+    public var txPowerLevel: Double?
+    
+    public init(
+        isConnectable: Bool?,
+        localName: String?,
+        manufacturerData: Data?,
+        overflowServiceUUIDs: [CBUUID]?,
+        serviceData: [CBUUID: Data]?,
+        serviceUUIDs: [CBUUID]?,
+        solicitedServiceUUIDs: [CBUUID]?,
+        txPowerLevel: Double?
+    ) {
+        self.isConnectable = isConnectable
+        self.localName = localName
+        self.manufacturerData = manufacturerData
+        self.overflowServiceUUIDs = overflowServiceUUIDs
+        self.serviceData = serviceData
+        self.serviceUUIDs = serviceUUIDs
+        self.solicitedServiceUUIDs = solicitedServiceUUIDs
+        self.txPowerLevel = txPowerLevel
+    }
+    
+}
+
+

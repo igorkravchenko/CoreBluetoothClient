@@ -28,7 +28,8 @@ extension CentralManager {
             }
             
             func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-                subject.send(.centralManagerDidDiscover(peripheral: .live(peripheral), advertisementData: advertisementData, rssi: RSSI))
+                subject.send(.centralManagerDidDiscover(peripheral: .live(peripheral),
+                                                        advertisementData: .live(advertisementData), rssi: RSSI))
             }
             
             func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -267,5 +268,20 @@ extension L2CAPChannel {
 extension Peer {
     public static func live(_ cb: CBPeer) -> Self {
         Self(identifier: { cb.identifier })
+    }
+}
+
+extension AdvertisementData {
+    public static func live(_ rawValue: [String: Any]) -> Self {
+        Self(
+            isConnectable: rawValue[CBAdvertisementDataIsConnectable] as? Bool,
+            localName: rawValue[CBAdvertisementDataLocalNameKey] as? String,
+            manufacturerData: rawValue[CBAdvertisementDataManufacturerDataKey] as? Data,
+            overflowServiceUUIDs: (rawValue[CBAdvertisementDataOverflowServiceUUIDsKey] as? [CBUUID]),
+            serviceData: (rawValue[CBAdvertisementDataServiceDataKey] as? [CBUUID: Data]),
+            serviceUUIDs: (rawValue[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID]),
+            solicitedServiceUUIDs: (rawValue[CBAdvertisementDataSolicitedServiceUUIDsKey] as? [CBUUID]),
+            txPowerLevel: (rawValue[CBAdvertisementDataTxPowerLevelKey] as? Double)
+        )
     }
 }
