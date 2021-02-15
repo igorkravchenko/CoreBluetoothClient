@@ -24,7 +24,7 @@ extension CentralManager {
             }
             
             func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
-                subject.send(.centralManagerWillRestoreState(dict))
+                subject.send(.centralManagerWillRestoreState(.live(dict)))
             }
             
             func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -282,6 +282,27 @@ extension AdvertisementData {
             serviceUUIDs: (rawValue[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID]),
             solicitedServiceUUIDs: (rawValue[CBAdvertisementDataSolicitedServiceUUIDsKey] as? [CBUUID]),
             txPowerLevel: (rawValue[CBAdvertisementDataTxPowerLevelKey] as? Double)
+        )
+    }
+}
+
+extension CentralManagerRestoredState {
+    public static func live(_ rawValue: [String: Any]) -> Self {
+        Self.init(
+            peripherals: (rawValue[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral])
+                .map { unwrapped in unwrapped.map(Peripheral.live) } ?? [],
+            services: rawValue[CBCentralManagerRestoredStateScanServicesKey] as? [CBUUID] ?? [],
+            scanOptions: (rawValue[CBCentralManagerRestoredStateScanOptionsKey] as? [String: Any])
+                .map(ScanOptions.live)
+        )
+    }
+}
+
+extension ScanOptions {
+    public static func live(_ rawValue: [String: Any]) -> Self {
+        Self(
+            allowDuplicates: rawValue[CBCentralManagerScanOptionAllowDuplicatesKey] as? Bool,
+            solicitedServiceUUIDs: rawValue[CBCentralManagerScanOptionSolicitedServiceUUIDsKey] as? [CBUUID]
         )
     }
 }

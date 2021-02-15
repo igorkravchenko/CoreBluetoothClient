@@ -52,7 +52,7 @@ public struct CentralManager {
 
     public enum DelegateEvent {
         case centralManagerDidUpdateState(CBManagerState)
-        case centralManagerWillRestoreState([String : Any])
+        case centralManagerWillRestoreState(CentralManagerRestoredState)
         case centralManagerDidDiscover(peripheral: Peripheral, advertisementData: AdvertisementData, rssi: NSNumber)
         case centralManagerDidConnectPeripheral(Peripheral)
         case centralManagerDidFailToConnectPeripheral(Peripheral, error: Error?)
@@ -343,7 +343,31 @@ public struct AdvertisementData: Equatable {
         self.solicitedServiceUUIDs = solicitedServiceUUIDs
         self.txPowerLevel = txPowerLevel
     }
+}
+
+public struct CentralManagerRestoredState {
+    public var peripherals: [Peripheral]
+    public var services: [CBUUID]
+    public var scanOptions: ScanOptions?
     
+    public init(peripherals: [Peripheral], services: [CBUUID], scanOptions: ScanOptions?) {
+        self.peripherals = peripherals
+        self.services = services
+        self.scanOptions = scanOptions
+    }
+}
+
+public struct ScanOptions {
+    public var allowDuplicates: Bool?
+    public var solicitedServiceUUIDs: [CBUUID]?
+
+    public init(
+        allowDuplicates: Bool?,
+        solicitedServiceUUIDs: [CBUUID]?
+    ) {
+        self.allowDuplicates = allowDuplicates
+        self.solicitedServiceUUIDs = solicitedServiceUUIDs
+    }
 }
 
 
