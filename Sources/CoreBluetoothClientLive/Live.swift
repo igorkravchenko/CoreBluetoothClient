@@ -78,7 +78,7 @@ extension CentralManager {
             retrieveConnectedPeripheralsWithServices: {
                 centalManager.retrieveConnectedPeripherals(withServices: $0).map(Peripheral.live)
             },
-            scanForPeripheralsWithSerivicesAndOptions: { services, options in
+            scanForPeripheralsWithServicesAndOptions: { services, options in
                 centalManager.scanForPeripherals(withServices: services, options: options?.rawValue)
             },
             stopScan: centalManager.stopScan,
